@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { useModal } from "@hooks/use-modal-store";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,14 +40,12 @@ const formSchema = z.object({
   }),
 });
 
-export default function InitialModal() {
-  const [mounted, setMounted] = useState(false);
+export default function CreateServerModal() {
+  const { type, isOpen, onClose } = useModal();
+
+  const isModalOpen = isOpen && type == "createServer";
 
   const router = useRouter();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -67,16 +65,18 @@ export default function InitialModal() {
 
       form.reset();
       router.refresh();
-      window.location.reload();
     } catch (error) {
       console.log(error);
     }
   }
 
-  if (!mounted) return null;
+  const handleClose = () => {
+    form.reset();
+    onClose();
+  };
 
   return (
-    <Dialog open>
+    <Dialog open={isModalOpen} onOpenChange={handleClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
