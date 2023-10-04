@@ -14,8 +14,6 @@ export default async function initialprofile() {
     },
   });
 
-  console.log(user);
-
   if (profile) {
     return profile;
   }
