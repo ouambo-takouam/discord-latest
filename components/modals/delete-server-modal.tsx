@@ -17,12 +17,12 @@ import {
 
 import { Button } from "@components/ui/button";
 
-export default function LeaveServerModal() {
+export default function DeleteServerModal() {
   const { type, isOpen, data, onClose } = useModal();
 
   const router = useRouter();
 
-  const isModalOpen = isOpen && type == "leaveServer";
+  const isModalOpen = isOpen && type == "deleteServer";
 
   const { server } = data;
 
@@ -32,7 +32,7 @@ export default function LeaveServerModal() {
     try {
       setLoading(true);
 
-      await axios.patch(`/api/servers/${server?.id}/leave`);
+      await axios.delete(`/api/servers/${server?.id}`);
 
       onClose();
       router.refresh();
@@ -49,14 +49,14 @@ export default function LeaveServerModal() {
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
-            Leave Server
+            Delete Server
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
-            Are you sure you want to leave{" "}
+            Are you sure you want to to this ? <br />
             <span className="font-semibold text-indigo-500">
               {server?.name}
-            </span>
-            ?
+            </span>{" "}
+            will be permanently deleted
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="bg-gray-100 px-6 py-4">
