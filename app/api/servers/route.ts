@@ -14,7 +14,7 @@ export async function POST(req: Request) {
     const profile = await getCurrentProfile();
 
     if (!profile) {
-      return new NextResponse("Unauthorized", { status: 500 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const server = await db.server.create({
