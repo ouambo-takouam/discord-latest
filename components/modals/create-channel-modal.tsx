@@ -39,6 +39,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ChannelType } from "@prisma/client";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   name: z
@@ -53,12 +54,14 @@ const formSchema = z.object({
 });
 
 export default function CreateChannelModal() {
-  const { type, isOpen, onClose } = useModal();
+  const { type, isOpen, data, onClose } = useModal();
 
   const isModalOpen = isOpen && type == "createChannel";
 
   const router = useRouter();
   const params = useParams();
+
+  const { channelType } = data;
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
@@ -68,6 +71,14 @@ export default function CreateChannelModal() {
       type: ChannelType.TEXT,
     },
   });
+
+  useEffect(() => {
+    if (channelType) {
+      form.setValue("type", channelType);
+    } else {
+      form.setValue("type", ChannelType.TEXT);
+    }
+  }, [channelType, form]);
 
   const loading = form.formState.isSubmitting;
 
